@@ -1,77 +1,104 @@
-<!-- views/subscribers.ejs -->
+<!-- views/space/index.ejs -->
 
-<main class="">
+<!--
+  Listing 18.8 (p. 268)
+  index.js에서의 모든 사용자 리스팅
+-->
+
+<main style="background-color: #5e0950;">
   <div class="container col-xl-10 col-xxl-8 px-4 py-5">
     <div class="pt-5 pb-5">
-      <h1>Subscribers</h1>
-      <p>Here are all the subscribers to our newsletter.</p>
+      <h1>space</h1>
+      <p>Here are all the space on our site.</p>
 
-      <table class="table table-striped table-hover pb-5">
+      <table class="table table-striped table-hover">
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">이미지</th>
-            <th scope="col">이름</th>
-            <th scope="col">이메일</th>
-            <th scope="col">전화번호</th>
-            <th scope="col">뉴스레터 구독자</th>
+            <th scope="col">Img</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phonenumber</th>
+            <th>Subscribed?</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% subscribers.forEach((s, i) => { %>
+          <% space.forEach(function(space, i) { %>
           <tr>
             <td><%= i+1 %></td>
             <td>
-              <figure class="subscriber-img">
-                <img src="<%= s.profileImg %>" />
-              </figure>
+              <a href="/space/<%= space.id %>">
+                <figure class="space-img">
+                  <img src="<%= space.profileImg ||
+                  "https://via.placeholder.com/150" %>" alt="Placeholder image"
+                  class="rounded-circle profile-img" />
+                </figure> </a
+              ><!-- HTML에서 사용자 이금과 ID 삽입 -->
             </td>
-            <td><%= s.name %></td>
-            <td><%= s.email %></td>
-            <td><%= s.phoneNumber %></td>
             <td>
-              <% if (s.newsletter) { %>
-              <span class="fas fa-check">✅</span>
-              <% } else { %>
-              <span class="fas fa-times">❌</span>
-              <% } %>
+              <a href="/space/<%= space.id %>"><%= space.name %></a
+              ><!-- HTML에서 사용자 이금과 ID 삽입 -->
+            </td>
+            <!-- 
+              Listing 19.6 (p. 284)
+              name 데이터 업데이트
+            -->
+            
+            <td><%= space.email %></td>
+            <td><%= space.phoneNumber %></td>
+            <% if (space.subscribedAccount) { %>
+            <!-- 구독 계정이 있는 경우 -->
+            <td><%= space.subscribedAccount %> ✅</td>
+            <% } else { %>
+            <!-- 구독 계정이 없는 경우 -->
+            <td>❌</td>
+            <% } %>
+            <td>
+              <!-- 
+                Listing 20.2 (p. 291)
+                사용자 편집을 위한 테이블 수정
+              -->
+              <a
+                class="btn btn-sm btn-outline-primary"
+                role="button"
+                href="/space/<%= space._id %>/edit"
+                >✏️ Edit</a
+              ><!-- 사용자 ID를 edit 태그 링크에 삽입 -->
+
+              <!-- 
+                Listing 20.8 (p. 297) 
+                사용자 삭제 링크
+              -->
+              <a
+                class="btn btn-sm btn-outline-danger"
+                role="button"
+                href="/space/<%= space._id %>/delete?_method=DELETE" 
+                onclick="return confirm('Are you sure you want to delete this record?')"
+                >🗑️ Delete</a
+              ><!-- 인덱스 페이지에서 delete 액션으로의 링크 추가 -->
+
+              <!--
+                노트: onclick="return confirm('Are you sure you want to delete this record?')"의
+                추가로 좀 더 안전한 장치를 추가할 수 있다.
+              -->
             </td>
           </tr>
           <% }); %>
         </tbody>
       </table>
 
-      <div class="mt-5 mb-5 text-center">
-        <a href="/subscribers/new" class="btn btn-primary">Add New Subscriber</a>
+      <div class="mt-5 text-center">
+        <a href="/space/new" class="btn btn-primary">Add New sports</a>
         <a
           href="/"
           class="btn ut-red disabled"
           role="button"
           aria-disabled="true"
-          >Delete All Subscribers</a
+          >Delete All space</a
         >
-        <button id="restore-db" class="btn btn-secondary" onclick="runNodeFunction()">Restore DB</button>
-        <script>
-          function runNodeFunction() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "C:/Users/ADMIN/Desktop/UT/Classes/2023.1-UT-NodeJS/final-project/final-project-sample/knut/data/seedSubscribers.js", true);
-            xhr.onreadystatechange = function() {
-
-              if (this.readyState === 4 && this.status === 200) {
-
-                var response = this.responseText;
-                eval(response); // Execute the response as JavaScript code
-                here(); // Call the Node.js function
-
-              }
-
-            };
-
-            xhr.send();
-
-          }
-
-        </script>
+        
+        
       </div>
     </div>
   </div>
